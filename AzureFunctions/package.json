@@ -10,10 +10,16 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "@azure/storage-blob": "^12.4.0"
+    "@azure/storage-blob": "^12.4.0",
+    "azure-storage": "^2.10.3",
+    "base64-js": "^1.5.1",
+    "body-parser": "^1.19.0",
+    "parse-multipart": "^1.0.4",
+    "qs": "^6.9.6"
   },
   "devDependencies": {
     "@azure/functions": "^1.0.2-beta2",
+    "@types/body-parser": "^1.19.0",
     "typescript": "^3.3.3"
   }
 }
