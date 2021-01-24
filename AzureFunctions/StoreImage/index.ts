@@ -137,7 +137,7 @@ class Database {
     database: 'postgres',
     entities: [__dirname + '\\src\\entity\\*.js'],
     synchronize: true,
-    ssl: false,
+    ssl: true,
   };
 
   /**
