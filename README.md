@@ -98,6 +98,10 @@ Storage application using AzureFunction to store large amounts of binary data.
 
 ## appendix
 
+### useful links
+
+[Binary to base64 string](https://rakko.tools/tools/72/)
+
 ### running cost
 
 ![running cost](/メモ//AzureRunningCost.png)
