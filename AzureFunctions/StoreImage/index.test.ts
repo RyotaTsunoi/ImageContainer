@@ -37,7 +37,7 @@ describe('Check request body data', () => {
     );
   });
 
-  test('Request body only base64data', async () => {
+  test('Request body has only base64data', async () => {
     const request = {
       rawBody: { base64data: 'sample' },
     };
@@ -50,7 +50,7 @@ describe('Check request body data', () => {
     );
   });
 
-  test('Request body only containerName', async () => {
+  test('Request body has only containerName', async () => {
     const request = {
       rawBody: { containerName: 'sample' },
     };
@@ -61,7 +61,7 @@ describe('Check request body data', () => {
     expect(context.res.body).toEqual('Request body shortage:[base64data,blobname,extension,createdAt,blobcontenttype]');
   });
 
-  test('Request body only blobname', async () => {
+  test('Request body has only blobname', async () => {
     const request = {
       rawBody: { blobname: 'sample' },
     };
@@ -74,7 +74,7 @@ describe('Check request body data', () => {
     );
   });
 
-  test('Request body only extension', async () => {
+  test('Request body has only extension', async () => {
     const request = {
       rawBody: { extension: 'sample' },
     };
@@ -87,7 +87,7 @@ describe('Check request body data', () => {
     );
   });
 
-  test('Request body only createdAt', async () => {
+  test('Request body has only createdAt', async () => {
     const request = {
       rawBody: { createdAt: 'sample' },
     };
@@ -100,7 +100,7 @@ describe('Check request body data', () => {
     );
   });
 
-  test('Request body only blobcontenttype', async () => {
+  test('Request body has only blobcontenttype', async () => {
     const request = {
       rawBody: { blobcontenttype: 'sample' },
     };
