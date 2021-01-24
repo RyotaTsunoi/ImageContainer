@@ -98,3 +98,7 @@ Storage application using AzureFunction to store large amounts of binary data.
 ### running cost
 
 ![running cost](/メモ//AzureRunningCost.png)
+
+### database data image
+
+![database data image](/メモ/DatabaseDataSample.png)
