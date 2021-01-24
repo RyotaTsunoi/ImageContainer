@@ -1,6 +1,7 @@
 <!-- @format -->
 
 # ImageContainer
+
 Storage application using AzureFunction to store large amounts of binary data.
 
 ## enviroment
@@ -38,6 +39,10 @@ Storage application using AzureFunction to store large amounts of binary data.
 - Azure function(API)
 - APIManagement(API 管理)-まだ
 - Azure Database for PostgreSQL
+
+## Architecture diagram
+
+![Architecture diagram](メモ\ImageContainerArchtecture.png)
 
 ## PoC
 
@@ -86,4 +91,10 @@ Storage application using AzureFunction to store large amounts of binary data.
 - 認証システム(AzureAD とか)
 - この API を使用するフロントエンド構築(NextJs on AzureStaticWebApps)
 - AzureDevOps での CI/CD
-- BlobStorage格納をキーにOCRを動かすファンクション作る
+- BlobStorage 格納をキーに OCR を動かすファンクション作る
+
+## appendix
+
+### running cost
+
+![running cost](メモ/AzureRunningCost.png)
