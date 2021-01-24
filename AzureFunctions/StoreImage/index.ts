@@ -23,16 +23,29 @@ type RequestBody = {
   blobcontenttype: string;
 } & Record<string, string | number | boolean>;
 
-const storeImageHttpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-  context.log('HTTP trigger function processed a request.');
+const requestBodyShortageCheck = (body: RequestBody): string[] => {
+  const shortageBodyCheck: string[] = [];
+  !body.base64data ? shortageBodyCheck.push('base64data') : '';
+  !body.containerName ? shortageBodyCheck.push('containerName') : '';
+  !body.blobname ? shortageBodyCheck.push('blobname') : '';
+  !body.extension ? shortageBodyCheck.push('extension') : '';
+  !body.createdAt ? shortageBodyCheck.push('createdAt') : '';
+  !body.blobcontenttype ? shortageBodyCheck.push('blobcontenttype') : '';
+  return shortageBodyCheck;
+};
 
+const storeImageHttpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   // Parse request body
   const parsedData: RequestBody = parse(req.rawBody);
-  if (!parsedData.base64data) {
+  const shortageBody = requestBodyShortageCheck(parsedData);
+
+  //Shortage request body is error
+  if (shortageBody.length > 0) {
     context.res = {
       status: 400,
-      body: 'Please send a base64 string in the request body',
+      body: `Request body shortage:[${shortageBody.join(',')}]`,
     };
+    return;
   }
 
   //Upload blob storage
