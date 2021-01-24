@@ -3,11 +3,15 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { parse } from 'qs';
 import { toByteArray } from 'base64-js';
+import 'reflect-metadata';
+import { Connection, createConnection, ConnectionOptions } from 'typeorm';
+import { StorageDataLink } from './src/entity/StorageDataLink';
 import {
   BlobServiceClient,
   StorageSharedKeyCredential,
   BlockBlobParallelUploadOptions,
   BlobUploadCommonResponse,
+  BlockBlobClient,
 } from '@azure/storage-blob';
 
 type RequestBody = {
@@ -19,27 +23,37 @@ type RequestBody = {
   blobcontenttype: string;
 } & Record<string, string | number | boolean>;
 
-const imageStoreHttpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const storeImageHttpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   context.log('HTTP trigger function processed a request.');
 
   // Parse request body
   const parsedData: RequestBody = parse(req.rawBody);
-  context.log(parsedData);
-
-  if (parsedData.base64data) {
-    const blobStorage = new BlobStorage(parsedData);
-    const uploadBlobResponse = await blobStorage.uploadBlobStorage();
-    context.log(`Upload block blob successfully`, uploadBlobResponse.requestId);
-    context.res = {
-      status: 200,
-      body: `Upload success! RequestId:${uploadBlobResponse.requestId} ETag:${uploadBlobResponse.etag}`,
-    };
-  } else {
+  if (!parsedData.base64data) {
     context.res = {
       status: 400,
-      body: 'Please pass a name on the query string or in the request body',
+      body: 'Please send a base64 string in the request body',
     };
   }
+
+  //Upload blob storage
+  const blobStorage = new BlobStorage(parsedData);
+  const blockBlobClient = await blobStorage.uploadBlobStorage();
+
+  //Insert database
+  try {
+    const database = new Database();
+    database.insertData(blockBlobClient.url, parsedData.blobname, parsedData.extension, 'sampleMetaData1');
+  } catch {
+    context.res = {
+      status: 400,
+      body: `Upload success! But insert database failed...`,
+    };
+  }
+
+  context.res = {
+    status: 200,
+    body: `Upload and database insert success!`,
+  };
 };
 
 /**
@@ -86,9 +100,9 @@ class BlobStorage {
   /**
    * Upload contents to azure blob storage
    * @function
-   * @return {Promise<BlobUploadCommonResponse>} Promise<BlobUploadCommonResponse>
+   * @return {Promise<BlockBlobClient>} Promise<BlockBlobClient>
    */
-  async uploadBlobStorage(): Promise<BlobUploadCommonResponse> {
+  async uploadBlobStorage(): Promise<BlockBlobClient> {
     // Specify output container
     const containeName = this.requestBody.containerName || 'outputcontainer'; //outputcontainer is default container
     const containerClient = this.blobServiceClient.getContainerClient(containeName);
@@ -104,8 +118,64 @@ class BlobStorage {
     // Upload blob file
     const binaryData = toByteArray(this.requestBody.base64data);
     const blobData = Buffer.from(binaryData);
-    return await blockBlobClient.uploadData(blobData, blobOption);
+    await blockBlobClient.uploadData(blobData, blobOption);
+    return blockBlobClient;
   }
 }
 
-export default imageStoreHttpTrigger;
+/**
+ * @class
+ * @classdesc Access to Azure SQL from Azure function
+ */
+class Database {
+  private readonly connectionOptions: ConnectionOptions = {
+    type: 'postgres',
+    host: process.env.DATABASE_CONNECTION_HOST,
+    port: 5432,
+    username: process.env.DATABASE_CONNECTION_USERNAME,
+    password: process.env.DATABASE_CONNECTION_PASSWORD,
+    database: 'postgres',
+    entities: [__dirname + '\\src\\entity\\*.js'],
+    synchronize: true,
+    ssl: false,
+  };
+
+  /**
+   * Database class Constractor
+   * @constructor
+   * @param none
+   */
+  constructor() {}
+
+  /**
+   * Create database connection
+   * @function
+   * @return {Promise<Connection>} Promise<Connection>
+   */
+  private async connectionBuilder(): Promise<Connection> {
+    return createConnection(this.connectionOptions);
+  }
+
+  /**
+   * Insert data
+   * @function
+   * @param {string} url blob storage url
+   * @param {string} name blob name
+   * @param {string} extension blob extension
+   * @param {string} meta1 blob meta 1
+   * @return Promise<void>
+   */
+  async insertData(url: string, name: string, extension: string, meta1: string): Promise<void> {
+    const connection = await this.connectionBuilder();
+    const repo = connection.getRepository(StorageDataLink);
+    const storageDataLink = new StorageDataLink();
+    storageDataLink.blob_url = url;
+    storageDataLink.blob_name = name;
+    storageDataLink.blob_extension = extension;
+    storageDataLink.meta_1 = meta1;
+    await repo.save(storageDataLink);
+    connection.close();
+  }
+}
+
+export default storeImageHttpTrigger;

@@ -9,10 +9,11 @@
 - VSCode:1.52.1
 - NodeJs:14.9.0
 - typescript:3.3.3
+- PostgreSql:13
 
 ### using npm package
 
-- typeORM(Typescript ORM)
+- typeORM(Typescript ORM)[Document](https://typeorm.io/#/)
 - pg(postgreSQL driver)
 - refrect-metadata(dependency typeORM)
 - base64-js(Base64 decode)
@@ -35,7 +36,7 @@
 - AppServicePlan(Azurefunction デプロイするのに必要)
 - Azure function(API)
 - APIManagement(API 管理)-まだ
-- PostgresSQL
+- Azure Database for PostgreSQL
 
 ## PoC
 
@@ -48,11 +49,11 @@
 
 ## APIs
 
-1. /getimage/{key}
+1. /getimage/{key} **未完成**
 
 - key 項目でクエリを行い、その結果を base64 形式で返す
 
-2. /storeimage
+2. /storeimage **一応動くはず**
 
 - リクエスト Body に埋め込まれた Base64 文字列で、blob storage にバイナリデータを保存する
 
@@ -70,3 +71,19 @@
      1. Content-type の問題、イメージファイルだから image/png とかしていたがこれが NG
      2. 解消方法:Content-Type は application/octet-stream でリクエストを投げる
      3. [参考リンク](https://docs.microsoft.com/ja-jp/azure/azure-functions/functions-bindings-http-webhook-trigger?tabs=javascript)
+  4. TypeORM のベストプラクティスがわからない
+     1. ドキュメント読んだり色々考えたりする
+  5. Deploy 後に AzureSQL につながらない
+     1. 環境変数の設定がローカルにしかなかった
+     2. 解消方法:AzureFunction→ 設定 → 構成 → アプリケーション設定で、新しいアプリケーション設定に追加していく
+     3. [参考リンク](https://docs.microsoft.com/ja-jp/azure/azure-functions/functions-how-to-use-azure-function-app-settings?tabs=portal)
+
+## enhance items
+
+- StorageKey 等を、アプリケーション設定に追加するのではなく、Azure key vault を使ってみる
+- 単一テーブルへの接続しか対応できていないので、汎用的なクラスを作る
+- 認証システム(AzureAD とか)
+- この API を使用するフロントエンド構築(NextJs on AzureStaticWebApps)
+- AzureDevOps での CI/CD
+- BlobStorage格納をキーにOCRを動かすファンクション作る
+- 
