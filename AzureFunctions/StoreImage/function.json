@@ -5,8 +5,8 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "route": "imagestore",
-      "methods": ["get", "post"]
+      "route": "storeimage",
+      "methods": ["post"]
     },
     {
       "type": "http",
@@ -14,5 +14,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/ImageStore/index.js"
+  "scriptFile": "../dist/StoreImage/index.js"
 }

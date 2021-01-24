@@ -1,26 +1,34 @@
 <!-- @format -->
 
-# Azure function
+# azure function
 
-## 環境
+## enviroment
 
-### 開発環境
+### development env
 
 - VSCode:1.52.1
 - NodeJs:14.9.0
 - typescript:3.3.3
 
-### VSCode 拡張機能
+### using npm package
+
+- typeORM(Typescript ORM)
+- pg(postgreSQL driver)
+- refrect-metadata(dependency typeORM)
+- base64-js(Base64 decode)
+- qs(http request body parser)
+
+### vscode extensions
 
 - AzureAccount:0.9.4
 - Azure Functions:1.2.0
 
-### 使用ツール
+### other tools
 
 - Postman
 - Azure storage explorer
 
-### Azure resources
+### azure resources
 
 - Application Insights(ログ取得用)
 - ストレージアカウント(BlobStorage)
@@ -29,7 +37,7 @@
 - APIManagement(API 管理)-まだ
 - PostgresSQL
 
-## 何を試したか
+## PoC
 
 1. Azurefunction の HttpBinding を使った、バイナリデータの BlobStorage 保管
 
@@ -38,7 +46,17 @@
   2. AzureFunction 上でリクエストを解析。Base64 文字列をデコードし、AzureBlobStorage に格納。
   3. その他ボディのデータを PostgresSqlServer にメタデータと、2 で格納した BlobContent とのリンクを格納する―まだ
 
-## 躓いたこと
+## APIs
+
+1. /getimage/{key}
+
+- key 項目でクエリを行い、その結果を base64 形式で返す
+
+2. /storeimage
+
+- リクエスト Body に埋め込まれた Base64 文字列で、blob storage にバイナリデータを保存する
+
+## problems
 
 - VSCode から Azure に関数デプロイするときにエラー
 
