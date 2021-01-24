@@ -46,6 +46,8 @@ const storeImageHttpTrigger: AzureFunction = async function (context: Context, r
       body: `Request body shortage:[${shortageBody.join(',')}]`,
     };
     return;
+  } else {
+    context.log('request body check ok.');
   }
 
   //Upload blob storage
