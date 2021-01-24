@@ -5,9 +5,8 @@ const context = require('../testing/defaultContext');
 const localSettings = require('../local.settings.json');
 
 describe('Standard root', () => {
-  beforeAll(() => {
-    process.env = {
-      ...process.env,
+  beforeEach(() => {
+    process.env = Object.assign(process.env, {
       STORAGE_ACCOUNT_NAME: localSettings.Values.STORAGE_ACCOUNT_NAME,
       STORAGE_ACCOUNT_KEY: localSettings.Values.STORAGE_ACCOUNT_KEY,
       AzureWebJobsStorage: localSettings.Values.AzureWebJobsStorage,
@@ -15,7 +14,7 @@ describe('Standard root', () => {
       DATABASE_CONNECTION_HOST: localSettings.Values.DATABASE_CONNECTION_HOST,
       DATABASE_CONNECTION_USERNAME: localSettings.Values.DATABASE_CONNECTION_USERNAME,
       DATABASE_CONNECTION_PASSWORD: localSettings.Values.DATABASE_CONNECTION_PASSWORD,
-    };
+    });
   });
   test('Standard root', async () => {
     const request = {
