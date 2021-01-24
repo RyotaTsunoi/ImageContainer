@@ -20,6 +20,8 @@ Storage application using AzureFunction to store large amounts of binary data.
 - refrect-metadata(dependency typeORM)
 - base64-js(Base64 decode)
 - qs(http request body parser)
+- jest
+- ts-jest
 
 ### vscode extensions
 
@@ -91,6 +93,7 @@ Storage application using AzureFunction to store large amounts of binary data.
 - 認証システム(AzureAD とか)
 - この API を使用するフロントエンド構築(NextJs on AzureStaticWebApps)
 - AzureDevOps での CI/CD
+- Jest によるテストコード作成
 - BlobStorage 格納をキーに OCR を動かすファンクション作る
 
 ## appendix
