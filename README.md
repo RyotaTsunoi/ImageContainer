@@ -42,7 +42,7 @@ Storage application using AzureFunction to store large amounts of binary data.
 
 ## Architecture diagram
 
-![Architecture diagram](/メモ/AzureRunningCost.png)
+![Architecture diagram](/メモ/ImageContainerArchtecture.png)
 
 ## PoC
 
