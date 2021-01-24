@@ -85,6 +85,10 @@ Storage application using AzureFunction to store large amounts of binary data.
      1. 環境変数の設定がローカルにしかなかった
      2. 解消方法:AzureFunction→ 設定 → 構成 → アプリケーション設定で、新しいアプリケーション設定に追加していく
      3. [参考リンク](https://docs.microsoft.com/ja-jp/azure/azure-functions/functions-how-to-use-azure-function-app-settings?tabs=portal)
+  6. Jest テストで、AzureFunction のコード上で local.settings.json の値を取得できない。
+     1. Jest テスト時は local.settings.json の値を自動的に process.env に格納してくれないので明示的に格納する必要がある
+     2. 解消方法:テスト内で local.settings.json をロード。必要な値のみ、process.env に登録していく処理(参考:/StoreImage/index.test.ts)
+     3. [参考リンク](https://github.com/MicrosoftDocs/azure-docs/issues/38310)
 
 ## enhance items
 
