@@ -1,5 +1,5 @@
 /** @format */
 
-module.exports = {
+export = {
   log: jest.fn(),
 };

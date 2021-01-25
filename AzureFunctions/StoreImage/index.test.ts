@@ -1,4 +1,9 @@
 /** @format */
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-var-requires*/
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import storeImageHttpTrigger from './index';
 import { base64String, incorrectBase64String, dataUri, incorrectDataUri } from '../testing/config';
 const context = require('../testing/defaultContext');

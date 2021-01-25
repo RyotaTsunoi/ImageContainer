@@ -22,6 +22,8 @@ Storage application using AzureFunction to store large amounts of binary data.
 - qs(http request body parser)
 - jest
 - ts-jest
+- eslint
+- prettier
 
 ### vscode extensions
 

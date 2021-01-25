@@ -1,7 +1,7 @@
 /** @format */
 
 type HttpTrigerResponse = {
-  [key: string]: any;
+  [key: string]: string | Date | number;
 };
 
 /**

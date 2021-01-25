@@ -20,7 +20,6 @@ const storeImageHttpTrigger: AzureFunction = async function (context: Context, r
   } else {
     context.log('request body check ok.');
   }
-
   //Upload blob storage
   const blobStorage = new BlobStorage(requestBody.parsedBody);
   const blockBlobClient = await blobStorage.uploadBlobStorage();
@@ -34,7 +33,7 @@ const storeImageHttpTrigger: AzureFunction = async function (context: Context, r
   try {
     if (blockBlobClient instanceof BlockBlobClient) {
       const database = new Database();
-      database.insertData(
+      await database.insertData(
         blockBlobClient.url,
         requestBody.parsedBody.blobInfo.name,
         requestBody.parsedBody.blobInfo.fileExtension,
