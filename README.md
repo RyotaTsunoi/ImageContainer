@@ -60,12 +60,9 @@ Storage application using AzureFunction to store large amounts of binary data.
 ## APIs
 
 1. /getimage/{key} **未完成**
-
-- key 項目でクエリを行い、その結果を base64 形式で返す
-
+   - key 項目でクエリを行い、その結果を base64 形式で返す
 2. /storeimage **一応動くはず**
-
-- リクエスト Body に埋め込まれた Base64 文字列で、blob storage にバイナリデータを保存する
+   - リクエスト Body に埋め込まれた Base64 文字列で、blob storage にバイナリデータを保存する
 
 ## problems
 
@@ -107,6 +104,7 @@ Storage application using AzureFunction to store large amounts of binary data.
 ### useful links
 
 [Binary to base64 string](https://rakko.tools/tools/72/)
+[Azure SDK for javascript](https://docs.microsoft.com/en-us/javascript/api/overview/azure/?view=azure-node-latest)
 
 ### running cost
 
