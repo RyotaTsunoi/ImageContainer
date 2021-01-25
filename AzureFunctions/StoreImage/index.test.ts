@@ -1,10 +1,10 @@
 /** @format */
 import storeImageHttpTrigger from './index';
-import { base64String } from '../testing/config';
+import { base64String, incorrectBase64String, dataUri, incorrectDataUri } from '../testing/config';
 const context = require('../testing/defaultContext');
 const localSettings = require('../local.settings.json');
 
-describe('Standard root', () => {
+describe('Check base64 string or dataUri decode are right', () => {
   beforeEach(() => {
     process.env = Object.assign(process.env, {
       STORAGE_ACCOUNT_NAME: localSettings.Values.STORAGE_ACCOUNT_NAME,
@@ -16,15 +16,17 @@ describe('Standard root', () => {
       DATABASE_CONNECTION_PASSWORD: localSettings.Values.DATABASE_CONNECTION_PASSWORD,
     });
   });
-  test('Standard root', async () => {
+
+  test('Body equal base64 string.', async () => {
     const request = {
       rawBody: {
-        base64data: base64String,
-        containerName: 'outcontainer',
-        blobname: 'fromTestCode',
-        extension: 'png',
-        createdAt: '2021-01-21',
-        blobcontenttype: 'image/png',
+        blobInfo: {
+          name: 'base64String',
+          fileExtension: 'png',
+          contentType: 'image/png',
+          dataUriOrBase64String: base64String,
+          containerName: 'outcontainer',
+        },
       },
     };
 
@@ -32,6 +34,62 @@ describe('Standard root', () => {
 
     expect(context.res.status).toEqual(200);
     expect(context.res.body).toEqual('Upload and database insert success!');
+  });
+
+  test('Body equal incorrect base64 string.', async () => {
+    const request = {
+      rawBody: {
+        blobInfo: {
+          name: 'IncorrectBase64String',
+          fileExtension: 'png',
+          contentType: 'image/png',
+          dataUriOrBase64String: incorrectBase64String,
+          containerName: 'outcontainer',
+        },
+      },
+    };
+
+    await storeImageHttpTrigger(context, request);
+
+    expect(context.res.status).toEqual(400);
+    expect(context.res.body).toEqual('Failed decode.');
+  });
+  test('Body equal data uri.', async () => {
+    const request = {
+      rawBody: {
+        blobInfo: {
+          name: 'dataUri',
+          fileExtension: 'png',
+          contentType: 'image/png',
+          dataUriOrBase64String: dataUri,
+          containerName: 'outcontainer',
+        },
+      },
+    };
+
+    await storeImageHttpTrigger(context, request);
+
+    expect(context.res.status).toEqual(200);
+    expect(context.res.body).toEqual('Upload and database insert success!');
+  });
+
+  test('Body equal incorrect data uri.', async () => {
+    const request = {
+      rawBody: {
+        blobInfo: {
+          name: 'IncorrectDataUri',
+          fileExtension: 'png',
+          contentType: 'image/png',
+          dataUriOrBase64String: incorrectDataUri,
+          containerName: 'outcontainer',
+        },
+      },
+    };
+
+    await storeImageHttpTrigger(context, request);
+
+    expect(context.res.status).toEqual(400);
+    expect(context.res.body).toEqual('Failed decode.');
   });
 });
 
@@ -44,82 +102,83 @@ describe('Check request body data', () => {
     await storeImageHttpTrigger(context, request);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual(
-      'Request body shortage:[base64data,containerName,blobname,extension,createdAt,blobcontenttype]'
-    );
+    expect(context.res.body).toEqual('Request body shortage:[blobInfo]');
   });
 
-  test('Request body has only base64data', async () => {
+  test('Request body has only name', async () => {
     const request = {
-      rawBody: { base64data: 'sample' },
+      rawBody: {
+        blobInfo: {
+          name: 'sample',
+        },
+      },
     };
 
     await storeImageHttpTrigger(context, request);
 
     expect(context.res.status).toEqual(400);
     expect(context.res.body).toEqual(
-      'Request body shortage:[containerName,blobname,extension,createdAt,blobcontenttype]'
+      'Request body shortage:[fileExtension,contentType,dataUriOrBase64String,containerName]'
     );
+  });
+
+  test('Request body has only fileExtension', async () => {
+    const request = {
+      rawBody: {
+        blobInfo: {
+          fileExtension: 'png',
+        },
+      },
+    };
+
+    await storeImageHttpTrigger(context, request);
+
+    expect(context.res.status).toEqual(400);
+    expect(context.res.body).toEqual('Request body shortage:[name,contentType,dataUriOrBase64String,containerName]');
+  });
+
+  test('Request body has only contentType', async () => {
+    const request = {
+      rawBody: {
+        blobInfo: {
+          contentType: 'image/png',
+        },
+      },
+    };
+
+    await storeImageHttpTrigger(context, request);
+
+    expect(context.res.status).toEqual(400);
+    expect(context.res.body).toEqual('Request body shortage:[name,fileExtension,dataUriOrBase64String,containerName]');
+  });
+
+  test('Request body has only dataUriOrBase64String', async () => {
+    const request = {
+      rawBody: {
+        blobInfo: {
+          dataUriOrBase64String: 'sample',
+        },
+      },
+    };
+
+    await storeImageHttpTrigger(context, request);
+
+    expect(context.res.status).toEqual(400);
+    expect(context.res.body).toEqual('Request body shortage:[name,fileExtension,contentType,containerName]');
   });
 
   test('Request body has only containerName', async () => {
     const request = {
-      rawBody: { containerName: 'sample' },
+      rawBody: {
+        blobInfo: {
+          containerName: 'container',
+        },
+      },
     };
 
     await storeImageHttpTrigger(context, request);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual('Request body shortage:[base64data,blobname,extension,createdAt,blobcontenttype]');
-  });
-
-  test('Request body has only blobname', async () => {
-    const request = {
-      rawBody: { blobname: 'sample' },
-    };
-
-    await storeImageHttpTrigger(context, request);
-
-    expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual(
-      'Request body shortage:[base64data,containerName,extension,createdAt,blobcontenttype]'
-    );
-  });
-
-  test('Request body has only extension', async () => {
-    const request = {
-      rawBody: { extension: 'sample' },
-    };
-
-    await storeImageHttpTrigger(context, request);
-
-    expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual(
-      'Request body shortage:[base64data,containerName,blobname,createdAt,blobcontenttype]'
-    );
-  });
-
-  test('Request body has only createdAt', async () => {
-    const request = {
-      rawBody: { createdAt: 'sample' },
-    };
-
-    await storeImageHttpTrigger(context, request);
-
-    expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual(
-      'Request body shortage:[base64data,containerName,blobname,extension,blobcontenttype]'
-    );
-  });
-
-  test('Request body has only blobcontenttype', async () => {
-    const request = {
-      rawBody: { blobcontenttype: 'sample' },
-    };
-
-    await storeImageHttpTrigger(context, request);
-
-    expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual('Request body shortage:[base64data,containerName,blobname,extension,createdAt]');
+    expect(context.res.body).toEqual('Request body shortage:[name,fileExtension,contentType,dataUriOrBase64String]');
   });
 });
