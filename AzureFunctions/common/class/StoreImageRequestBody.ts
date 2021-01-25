@@ -35,7 +35,7 @@ export class StoreImageRequestBody {
    */
   checkRequestBodyParams = (): string => {
     if (!this.parsedBody.blobInfo) {
-      return 'blobInfo';
+      return 'Request body shortage:[blobInfo]';
     }
     const shortageBodyCheck: string[] = [];
     !this.parsedBody.blobInfo.name ? shortageBodyCheck.push('name') : '';
@@ -44,6 +44,10 @@ export class StoreImageRequestBody {
     !this.parsedBody.blobInfo.dataUriOrBase64String ? shortageBodyCheck.push('dataUriOrBase64String') : '';
     !this.parsedBody.blobInfo.containerName ? shortageBodyCheck.push('containerName') : '';
 
-    return shortageBodyCheck.join(',');
+    if (shortageBodyCheck.length > 0) {
+      return `Request body shortage:[${shortageBodyCheck.join(',')}]`;
+    } else {
+      return '';
+    }
   };
 }

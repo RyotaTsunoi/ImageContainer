@@ -10,11 +10,12 @@ const storeImageHttpTrigger: AzureFunction = async function (context: Context, r
   // Parse request body
   const requestBody = new StoreImageRequestBody(req.rawBody);
   const shortageCheckResult = requestBody.checkRequestBodyParams();
+
   //Shortage request body is error
   if (shortageCheckResult) {
     context.res = {
       status: 400,
-      body: `Request body shortage:[${shortageCheckResult}]`,
+      body: shortageCheckResult,
     };
     return;
   } else {
@@ -24,10 +25,10 @@ const storeImageHttpTrigger: AzureFunction = async function (context: Context, r
   //Upload blob storage
   const blobStorage = new BlobStorage(requestBody.parsedBody);
   const blockBlobClient = await blobStorage.uploadBlobStorage();
-  if (blockBlobClient === 'Failed decode.') {
+  if (typeof blockBlobClient === 'string') {
     context.res = {
       status: 400,
-      body: 'Failed decode.',
+      body: blockBlobClient,
     };
     return;
   }
