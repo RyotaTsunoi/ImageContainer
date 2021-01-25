@@ -4,4 +4,8 @@
 .vscode
 local.settings.json
 test
+testing
 tsconfig.json
+.eslintrc.js
+.prettierrc.js
+jest.config.js
