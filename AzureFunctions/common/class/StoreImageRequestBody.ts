@@ -23,8 +23,8 @@ export class StoreImageRequestBody {
    * @constructor
    * @param {string} rawBody request.rawBody
    */
-  constructor(rawBody: string) {
-    this.parsedBody = parse(rawBody);
+  constructor(requestBody: RequestBody) {
+    this.parsedBody = requestBody;
   }
 
   /**

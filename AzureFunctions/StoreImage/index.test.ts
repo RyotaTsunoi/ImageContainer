@@ -19,7 +19,7 @@ describe('Check base64 string or dataUri decode are right', () => {
 
   test('Body equal base64 string.', async () => {
     const request = {
-      rawBody: {
+      body: {
         blobInfo: {
           name: 'base64String',
           fileExtension: 'png',
@@ -38,7 +38,7 @@ describe('Check base64 string or dataUri decode are right', () => {
 
   test('Body equal incorrect base64 string.', async () => {
     const request = {
-      rawBody: {
+      body: {
         blobInfo: {
           name: 'IncorrectBase64String',
           fileExtension: 'png',
@@ -56,7 +56,7 @@ describe('Check base64 string or dataUri decode are right', () => {
   });
   test('Body equal data uri.', async () => {
     const request = {
-      rawBody: {
+      body: {
         blobInfo: {
           name: 'dataUri',
           fileExtension: 'png',
@@ -75,7 +75,7 @@ describe('Check base64 string or dataUri decode are right', () => {
 
   test('Body equal incorrect data uri.', async () => {
     const request = {
-      rawBody: {
+      body: {
         blobInfo: {
           name: 'IncorrectDataUri',
           fileExtension: 'png',
@@ -96,7 +96,7 @@ describe('Check base64 string or dataUri decode are right', () => {
 describe('Check request body data', () => {
   test('Empty request body', async () => {
     const request = {
-      rawBody: {},
+      body: {},
     };
 
     await storeImageHttpTrigger(context, request);
@@ -107,7 +107,7 @@ describe('Check request body data', () => {
 
   test('Request body has only name', async () => {
     const request = {
-      rawBody: {
+      body: {
         blobInfo: {
           name: 'sample',
         },
@@ -124,7 +124,7 @@ describe('Check request body data', () => {
 
   test('Request body has only fileExtension', async () => {
     const request = {
-      rawBody: {
+      body: {
         blobInfo: {
           fileExtension: 'png',
         },
@@ -139,7 +139,7 @@ describe('Check request body data', () => {
 
   test('Request body has only contentType', async () => {
     const request = {
-      rawBody: {
+      body: {
         blobInfo: {
           contentType: 'image/png',
         },
@@ -154,7 +154,7 @@ describe('Check request body data', () => {
 
   test('Request body has only dataUriOrBase64String', async () => {
     const request = {
-      rawBody: {
+      body: {
         blobInfo: {
           dataUriOrBase64String: 'sample',
         },
@@ -169,7 +169,7 @@ describe('Check request body data', () => {
 
   test('Request body has only containerName', async () => {
     const request = {
-      rawBody: {
+      body: {
         blobInfo: {
           containerName: 'container',
         },

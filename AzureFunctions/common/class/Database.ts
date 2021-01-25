@@ -16,7 +16,7 @@ export class Database {
     username: process.env.DATABASE_CONNECTION_USERNAME,
     password: process.env.DATABASE_CONNECTION_PASSWORD,
     database: 'postgres',
-    entities: [__dirname + '\\**\\entity\\*{.ts,.js}'],
+    entities: [StorageDataLink],
     synchronize: true,
     ssl: false,
   };
@@ -26,7 +26,10 @@ export class Database {
    * @constructor
    * @param none
    */
-  constructor() {}
+  constructor() {
+    console.log(this.connectionOptions);
+    console.log(this.connectionOptions.entities);
+  }
 
   /**
    * Create database connection

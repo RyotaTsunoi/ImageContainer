@@ -8,7 +8,7 @@ import { StoreImageRequestBody } from '../common/class/StoreImageRequestBody';
 
 const storeImageHttpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   // Parse request body
-  const requestBody = new StoreImageRequestBody(req.rawBody);
+  const requestBody = new StoreImageRequestBody(req.body);
   const shortageCheckResult = requestBody.checkRequestBodyParams();
 
   //Shortage request body is error
