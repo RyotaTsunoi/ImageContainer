@@ -31,9 +31,11 @@ describe('Check base64 string or dataUri decode are right', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(200);
-    expect(context.res.body).toEqual('Upload and database insert success!');
+    expect(responseBody.name).toEqual('Success');
+    expect(responseBody.message).toEqual('Upload and database insert success!');
   });
 
   test('Body equal incorrect base64 string.', async () => {
@@ -50,9 +52,11 @@ describe('Check base64 string or dataUri decode are right', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual('Failed decode.');
+    expect(responseBody.name).toEqual('string decode failed');
+    expect(responseBody.message).toEqual('Failed decode.');
   });
   test('Body equal data uri.', async () => {
     const request = {
@@ -68,9 +72,11 @@ describe('Check base64 string or dataUri decode are right', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(200);
-    expect(context.res.body).toEqual('Upload and database insert success!');
+    expect(responseBody.name).toEqual('Success');
+    expect(responseBody.message).toEqual('Upload and database insert success!');
   });
 
   test('Body equal incorrect data uri.', async () => {
@@ -87,9 +93,11 @@ describe('Check base64 string or dataUri decode are right', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual('Failed decode.');
+    expect(responseBody.name).toEqual('string decode failed');
+    expect(responseBody.message).toEqual('Failed decode.');
   });
 });
 
@@ -100,9 +108,11 @@ describe('Check request body data', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual('Request body shortage:[blobInfo]');
+    expect(responseBody.name).toEqual('request shortage');
+    expect(responseBody.message).toEqual('Request body shortage:[blobInfo]');
   });
 
   test('Request body has only name', async () => {
@@ -115,9 +125,11 @@ describe('Check request body data', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual(
+    expect(responseBody.name).toEqual('request shortage');
+    expect(responseBody.message).toEqual(
       'Request body shortage:[fileExtension,contentType,dataUriOrBase64String,containerName]'
     );
   });
@@ -132,9 +144,13 @@ describe('Check request body data', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual('Request body shortage:[name,contentType,dataUriOrBase64String,containerName]');
+    expect(responseBody.name).toEqual('request shortage');
+    expect(responseBody.message).toEqual(
+      'Request body shortage:[name,contentType,dataUriOrBase64String,containerName]'
+    );
   });
 
   test('Request body has only contentType', async () => {
@@ -147,9 +163,13 @@ describe('Check request body data', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual('Request body shortage:[name,fileExtension,dataUriOrBase64String,containerName]');
+    expect(responseBody.name).toEqual('request shortage');
+    expect(responseBody.message).toEqual(
+      'Request body shortage:[name,fileExtension,dataUriOrBase64String,containerName]'
+    );
   });
 
   test('Request body has only dataUriOrBase64String', async () => {
@@ -162,9 +182,11 @@ describe('Check request body data', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual('Request body shortage:[name,fileExtension,contentType,containerName]');
+    expect(responseBody.name).toEqual('request shortage');
+    expect(responseBody.message).toEqual('Request body shortage:[name,fileExtension,contentType,containerName]');
   });
 
   test('Request body has only containerName', async () => {
@@ -177,8 +199,12 @@ describe('Check request body data', () => {
     };
 
     await storeImageHttpTrigger(context, request);
+    const responseBody = JSON.parse(context.res.body);
 
     expect(context.res.status).toEqual(400);
-    expect(context.res.body).toEqual('Request body shortage:[name,fileExtension,contentType,dataUriOrBase64String]');
+    expect(responseBody.name).toEqual('request shortage');
+    expect(responseBody.message).toEqual(
+      'Request body shortage:[name,fileExtension,contentType,dataUriOrBase64String]'
+    );
   });
 });
