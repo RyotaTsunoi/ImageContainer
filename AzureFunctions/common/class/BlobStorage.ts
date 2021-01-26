@@ -1,5 +1,4 @@
 /** @format */
-
 import { toByteArray } from 'base64-js';
 import {
   BlobServiceClient,
@@ -8,30 +7,45 @@ import {
   BlockBlobClient,
 } from '@azure/storage-blob';
 import { RequestBody } from './StoreImageRequestBody';
+import { ManageStorageIdentity } from './ManageIdentity';
 
 /**
  * @class
  * @classdesc Access to Azure blob storage from Azure function
  */
 export class BlobStorage {
-  private readonly accountName = process.env.STORAGE_ACCOUNT_NAME;
-  private readonly accountKey = process.env.STORAGE_ACCOUNT_KEY;
-  private readonly sharedKeyCredential: StorageSharedKeyCredential;
-  private readonly blobServiceClient: BlobServiceClient;
-  private readonly requestBody: RequestBody;
+  private sharedKeyCredential: StorageSharedKeyCredential;
+  private blobServiceClient: BlobServiceClient;
+  private requestBody: RequestBody;
 
   /**
    * BlobStorage class Constractor
    * @constructor
-   * @param {requestBody} requestBody HttPRequestBody
+   * @param {RequestBody} requestBody HttPRequestBody
    */
-  constructor(requestBody: RequestBody) {
-    this.sharedKeyCredential = new StorageSharedKeyCredential(this.accountName, this.accountKey);
+  constructor(requestBody: RequestBody, credential: ManageStorageIdentity) {
+    this.sharedKeyCredential = new StorageSharedKeyCredential(
+      credential.storageAccountName,
+      credential.storageAccountKey
+    );
+
     this.blobServiceClient = new BlobServiceClient(
-      `https://${this.accountName}.blob.core.windows.net`,
+      `https://${credential.storageAccountName}.blob.core.windows.net`,
       this.sharedKeyCredential
     );
+
     this.requestBody = requestBody;
+  }
+
+  /**
+   * Blob storage factory.
+   * @function
+   * @param {RequestBody} requestBody HttPRequestBody
+   * @return {Promise<BlobStorage>} BlobStorage
+   */
+  static async blobStorageFactory(requestBody: RequestBody): Promise<BlobStorage> {
+    const credential = await ManageStorageIdentity.manageStorageIdentityFactory();
+    return new BlobStorage(requestBody, credential);
   }
 
   /**

@@ -43,6 +43,7 @@ Storage application using AzureFunction to store large amounts of binary data.
 - Azure function(API)
 - APIManagement(API 管理)-まだ
 - Azure Database for PostgreSQL
+- Azure Key Vault
 
 ## Architecture diagram
 

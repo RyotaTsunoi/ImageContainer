@@ -20,8 +20,9 @@ const storeImageHttpTrigger: AzureFunction = async function (context: Context, r
   } else {
     context.log('request body check ok.');
   }
+  
   //Upload blob storage
-  const blobStorage = new BlobStorage(requestBody.parsedBody);
+  const blobStorage = await BlobStorage.blobStorageFactory(requestBody.parsedBody);
   const blockBlobClient = await blobStorage.uploadBlobStorage();
   if (typeof blockBlobClient === 'string') {
     const customResponse = new CustomResponse(400, 'string decode failed', blockBlobClient);
