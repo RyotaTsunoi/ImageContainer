@@ -19,6 +19,17 @@ export class BlobStorage {
   private requestBody: RequestBody;
 
   /**
+   * Blob storage factory.
+   * @function
+   * @param {RequestBody} requestBody HttPRequestBody
+   * @return {Promise<BlobStorage>} BlobStorage
+   */
+  static async blobStorageFactory(requestBody: RequestBody): Promise<BlobStorage> {
+    const credential = await ManageStorageIdentity.manageStorageIdentityFactory();
+    return new BlobStorage(requestBody, credential);
+  }
+
+  /**
    * BlobStorage class Constractor
    * @constructor
    * @param {RequestBody} requestBody HttPRequestBody
@@ -35,17 +46,6 @@ export class BlobStorage {
     );
 
     this.requestBody = requestBody;
-  }
-
-  /**
-   * Blob storage factory.
-   * @function
-   * @param {RequestBody} requestBody HttPRequestBody
-   * @return {Promise<BlobStorage>} BlobStorage
-   */
-  static async blobStorageFactory(requestBody: RequestBody): Promise<BlobStorage> {
-    const credential = await ManageStorageIdentity.manageStorageIdentityFactory();
-    return new BlobStorage(requestBody, credential);
   }
 
   /**
