@@ -1,4 +1,3 @@
-/** @format */
 import { toByteArray } from 'base64-js';
 import {
   BlobServiceClient,
@@ -66,7 +65,7 @@ export class BlobStorage {
   private createBlobBlobUploadOptions = (): BlockBlobParallelUploadOptions => {
     return {
       metadata: {
-        createdat: '2021-1-1',
+        createDateTime: new Date().toISOString(),
       },
       blobHTTPHeaders: {
         blobContentType: this.requestBody.blobInfo.contentType,
@@ -84,18 +83,18 @@ export class BlobStorage {
     const base64String = this.extractBase64String(this.requestBody.blobInfo.dataUriOrBase64String);
 
     // Specify output container
-    const containeName = this.requestBody.blobInfo.containerName || 'outputcontainer'; //outputcontainer is default container
+    const containeName = this.requestBody.blobInfo.containerName;
     const containerClient = this.blobServiceClient.getContainerClient(containeName);
 
     // Create blob options
     const blobOption = this.createBlobBlobUploadOptions();
 
     // Create a blob
-    const blobname = this.requestBody.blobInfo.name || 'SampleData';
-    const extension = this.requestBody.blobInfo.fileExtension || 'png';
+    const blobname = this.requestBody.blobInfo.name;
+    const extension = this.requestBody.blobInfo.fileExtension;
     const blobFileName = `${blobname}.${extension}`;
     const blockBlobClient = containerClient.getBlockBlobClient(blobFileName);
-    // Upload blob file. if decode failed, context.res return;
+
     try {
       const binaryData = toByteArray(base64String);
       const blobData = Buffer.from(binaryData);

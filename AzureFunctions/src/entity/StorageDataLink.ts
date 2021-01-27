@@ -11,6 +11,12 @@ export class StorageDataLink {
     length: 200,
     default: '',
   })
+  search_key: string;
+
+  @Column({
+    length: 200,
+    default: '',
+  })
   blob_url: string;
 
   @Column({
@@ -29,36 +35,12 @@ export class StorageDataLink {
     length: 200,
     default: '',
   })
-  meta_1: string;
-
-  @Column({
-    length: 200,
-    default: '',
-  })
-  meta_2: string;
-
-  @Column({
-    length: 200,
-    default: '',
-  })
-  meta_3: string;
-
-  @Column({
-    length: 200,
-    default: '',
-  })
-  meta_4: string;
-
-  @Column({
-    length: 200,
-    default: '',
-  })
-  meta_5: string;
+  metadata1: string;
 
   @Column('text', {
     default: '',
   })
-  meta_6_ocr_result: string;
+  metadata_ocr_reslut: string;
 
   @Column({
     default: true,
@@ -68,5 +50,5 @@ export class StorageDataLink {
   @Column({
     default: '2021-02-01',
   })
-  created_at: string;
+  created_at: Date;
 }

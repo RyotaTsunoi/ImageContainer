@@ -1,7 +1,7 @@
 /** @format */
 
 import { Connection, createConnection, ConnectionOptions } from 'typeorm';
-import { StorageDataLink } from '../../entity/StorageDataLink';
+import { StorageDataLink } from '../entity/StorageDataLink';
 import 'reflect-metadata';
 
 /**
@@ -51,13 +51,13 @@ export class Database {
    */
   async insertData(url: string, name: string, extension: string, meta1: string): Promise<void> {
     const connection = await this.connectionBuilder();
-    const repo = await connection.getRepository(StorageDataLink);
+    const repo = connection.getRepository(StorageDataLink);
     const storageDataLink = new StorageDataLink();
     storageDataLink.blob_url = url;
     storageDataLink.blob_name = name;
     storageDataLink.blob_extension = extension;
-    storageDataLink.meta_1 = meta1;
+    storageDataLink.metadata1 = meta1;
     await repo.save(storageDataLink);
-    connection.close();
+    await connection.close();
   }
 }

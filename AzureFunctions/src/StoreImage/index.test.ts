@@ -5,16 +5,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import storeImageHttpTrigger from './index';
-import { base64String, incorrectBase64String, dataUri, incorrectDataUri } from '../testing/config';
-const context = require('../testing/defaultContext');
-const localSettings = require('../local.settings.json');
+import { base64String, incorrectBase64String, dataUri, incorrectDataUri } from '../../testing/config';
+const context = require('../../testing/defaultContext');
+const localSettings = require('../../local.settings.json');
 
 describe('Check base64 string or dataUri decode are right', () => {
   beforeEach(() => {
     process.env = Object.assign(process.env, {
-      STORAGE_ACCOUNT_NAME: localSettings.Values.STORAGE_ACCOUNT_NAME,
-      STORAGE_ACCOUNT_KEY: localSettings.Values.STORAGE_ACCOUNT_KEY,
-      AzureWebJobsStorage: localSettings.Values.AzureWebJobsStorage,
+      TARGET_STORAGE: localSettings.Values.TARGET_STORAGE,
       DATABASE_CONNECTION_TYPE: localSettings.Values.DATABASE_CONNECTION_TYPE,
       DATABASE_CONNECTION_HOST: localSettings.Values.DATABASE_CONNECTION_HOST,
       DATABASE_CONNECTION_USERNAME: localSettings.Values.DATABASE_CONNECTION_USERNAME,

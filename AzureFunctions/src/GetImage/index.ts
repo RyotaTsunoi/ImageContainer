@@ -1,5 +1,3 @@
-/** @format */
-
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { parse } from 'qs';
 import { toByteArray } from 'base64-js';

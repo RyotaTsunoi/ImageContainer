@@ -1,6 +1,3 @@
-/** @format */
-import { parse } from 'qs';
-
 export type RequestBody = {
   blobInfo: {
     name: string;

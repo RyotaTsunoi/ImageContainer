@@ -1,11 +1,9 @@
-/** @format */
-
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
-import { Database } from '../common/class/Database';
-import { BlobStorage } from '../common/class/BlobStorage';
-import { CustomResponse } from '../common/class/CustomeResponse';
+import { Database } from '../class/Database';
+import { BlobStorage } from '../class/BlobStorage';
+import { CustomResponse } from '../class/CustomeResponse';
 import { BlockBlobClient } from '@azure/storage-blob';
-import { StoreImageRequestBody } from '../common/class/StoreImageRequestBody';
+import { StoreImageRequestBody } from '../class/StoreImageRequestBody';
 
 const storeImageHttpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   // Parse request body
@@ -14,19 +12,17 @@ const storeImageHttpTrigger: AzureFunction = async function (context: Context, r
 
   //Shortage request body is error
   if (shortageCheckResult) {
-    const customResponse = new CustomResponse(400, 'request shortage', shortageCheckResult);
-    context.res = customResponse.response;
+    context.res = new CustomResponse(400, 'request shortage', shortageCheckResult).response;
     return;
   } else {
     context.log('request body check ok.');
   }
-  
+
   //Upload blob storage
   const blobStorage = await BlobStorage.blobStorageFactory(requestBody.parsedBody);
   const blockBlobClient = await blobStorage.uploadBlobStorage();
   if (typeof blockBlobClient === 'string') {
-    const customResponse = new CustomResponse(400, 'string decode failed', blockBlobClient);
-    context.res = customResponse.response;
+    context.res = new CustomResponse(400, 'string decode failed', blockBlobClient).response;
     return;
   }
 
@@ -42,13 +38,11 @@ const storeImageHttpTrigger: AzureFunction = async function (context: Context, r
       );
     }
   } catch {
-    const customResponse = new CustomResponse(400, 'database error', 'Upload success! But insert database failed...');
-    context.res = customResponse.response;
+    context.res = new CustomResponse(400, 'database error', 'Upload success! But insert database failed...').response;
     return;
   }
 
-  const customResponse = new CustomResponse(200, 'Success', 'Upload and database insert success!');
-  context.res = customResponse.response;
+  context.res = new CustomResponse(200, 'Success', 'Upload and database insert success!').response;
   return;
 };
 
