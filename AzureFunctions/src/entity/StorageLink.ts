@@ -2,8 +2,12 @@
 
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+export type StorageLinkJsonColumn = {
+  [key: string]: any;
+};
+
 @Entity()
-export class StorageDataLink {
+export class StorageLink {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,44 +15,36 @@ export class StorageDataLink {
     length: 200,
     default: '',
   })
-  search_key: string;
+  searchKey: string;
 
   @Column({
     length: 200,
     default: '',
   })
-  blob_url: string;
+  uri: string;
 
   @Column({
     length: 200,
     default: '',
   })
-  blob_name: string;
+  name: string;
 
   @Column({
     length: 200,
     default: '',
   })
-  blob_extension: string;
+  contentType: string;
+
+  @Column('json')
+  metaData: StorageLinkJsonColumn;
 
   @Column({
-    length: 200,
-    default: '',
+    default: false,
   })
-  metadata1: string;
-
-  @Column('text', {
-    default: '',
-  })
-  metadata_ocr_reslut: string;
+  canViewOnlyAdmin: boolean;
 
   @Column({
-    default: true,
+    default: new Date(),
   })
-  is_admin_only: boolean;
-
-  @Column({
-    default: '2021-02-01',
-  })
-  created_at: Date;
+  createdAt: Date;
 }

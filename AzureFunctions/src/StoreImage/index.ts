@@ -1,9 +1,30 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
-import { Database } from '../class/Database';
-import { BlobStorage } from '../class/BlobStorage';
+import { StorageLinkDatabase, StorageLinkInsertData } from '../class/StorageLinkDatabase';
+import { StorageLinkJsonColumn } from '../entity/StorageLink';
+import { BlobStorage } from '../class/ImageBlobStorage';
 import { CustomResponse } from '../class/CustomeResponse';
 import { BlockBlobClient } from '@azure/storage-blob';
 import { StoreImageRequestBody } from '../class/StoreImageRequestBody';
+
+const craeteInsertDataParams = (
+  searchKey: string,
+  uri: string,
+  name: string,
+  contentType: string,
+  metaData?: StorageLinkJsonColumn,
+  canViewOnlyAdmin = true,
+  crated_at = new Date()
+) => {
+  return {
+    searchKey,
+    uri,
+    name,
+    contentType,
+    metaData,
+    canViewOnlyAdmin,
+    crated_at,
+  };
+};
 
 const storeImageHttpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   // Parse request body
@@ -29,13 +50,16 @@ const storeImageHttpTrigger: AzureFunction = async function (context: Context, r
   //Insert database
   try {
     if (blockBlobClient instanceof BlockBlobClient) {
-      const database = new Database();
-      await database.insertData(
+      const database = await StorageLinkDatabase.create();
+      const [searchKey, uri, name, contentType, metaData] = [
+        'SampleSearchKey',
         blockBlobClient.url,
-        requestBody.parsedBody.blobInfo.name,
-        requestBody.parsedBody.blobInfo.fileExtension,
-        'sampleMetaData1'
-      );
+        blockBlobClient.name,
+        requestBody.parsedBody.blobInfo.contentType,
+        {},
+      ];
+      const insertParams: StorageLinkInsertData = craeteInsertDataParams(searchKey, uri, name, contentType, metaData);
+      await database.insertData(insertParams);
     }
   } catch {
     context.res = new CustomResponse(400, 'database error', 'Upload success! But insert database failed...').response;
